@@ -1,0 +1,74 @@
+# Inference configuration for iOS app
+# These settings control detection behavior in the mobile app
+
+inference:
+  # Image preprocessing
+  imgsz: 640  # Input size (must match training size)
+  letterbox: true  # Maintain aspect ratio with letterbox padding
+  
+  # Detection thresholds
+  confidence_threshold: 0.4  # Minimum confidence for detection (adjust based on model performance)
+  iou_threshold: 0.7  # IoU threshold for Non-Maximum Suppression
+  
+  # Performance settings
+  max_detections: 100  # Maximum number of detections per image
+  use_gpu: true  # Use Neural Engine (automatically handled by CoreML on iOS)
+  
+  # Post-processing
+  merge_overlapping: true  # Merge overlapping detections
+  min_box_area: 100  # Minimum bounding box area (in pixels) to filter tiny detections
+
+# iOS-specific optimizations
+ios:
+  # Batch processing
+  batch_size: 1  # Always 1 for real-time camera inference
+  
+  # Memory management
+  cache_model: true  # Cache model in memory after first load
+  clear_cache_interval: 100  # Clear cache after N inferences (0 = never)
+  
+  # Performance tuning
+  process_on_background_queue: true  # Don't block main UI thread
+  use_vision_framework: true  # Use Vision framework for preprocessing (optimized)
+  
+  # User experience
+  show_confidence: true  # Display confidence percentages to user
+  show_all_classes: true  # Show all detections, not just highest confidence
+  animation_duration: 0.3  # Animation duration for UI updates (seconds)
+
+# Class-specific settings (can be adjusted per defect type)
+classes:
+  D00:  # Longitudinal crack
+    min_confidence: 0.35
+    color: "#007AFF"  # iOS blue
+  D01:  # Transverse crack
+    min_confidence: 0.35
+    color: "#FF3B30"  # iOS red
+  D10:  # Alligator crack
+    min_confidence: 0.40
+    color: "#FF9500"  # iOS orange
+  D11:  # Pothole
+    min_confidence: 0.45
+    color: "#AF52DE"  # iOS purple
+  D20:  # Marking blur
+    min_confidence: 0.30
+    color: "#FFCC00"  # iOS yellow
+  D40:  # Road repair
+    min_confidence: 0.35
+    color: "#34C759"  # iOS green
+
+# Quality settings
+quality:
+  # Image capture
+  camera_quality: "high"  # high, medium, low
+  photo_library_quality: "original"  # original, high, medium, low
+  
+  # Image compression (for saving results)
+  jpeg_quality: 0.85  # 0.0 to 1.0
+  save_original: true  # Keep original image alongside annotated version
+
+# Analytics (optional - for app improvement)
+analytics:
+  track_inference_time: true  # Log inference times
+  track_detection_counts: true  # Track how many detections per image
+  anonymous_usage: true  # Collect anonymous usage statistics

@@ -1,0 +1,65 @@
+# Optimized training configuration for PHASE1 - High accuracy for iOS deployment
+# Target: mAP@0.5 > 65% for production-ready iOS app
+# Balance between accuracy and mobile inference speed
+
+experiment:
+  project: "results"
+  name: "yolov8s_rdd2022_phase1"  # Using 's' (small) instead of 'n' (nano) for better accuracy
+  seed: 42
+  exist_ok: false
+
+model:
+  weights: "yolov8s.pt"  # Upgraded from nano to small for better accuracy
+  # yolov8s: Better accuracy than nano, still mobile-friendly (~22MB vs 6MB)
+  # For iOS: CoreML can handle this size efficiently on modern iPhones
+  imgsz: 640  # Standard YOLOv8 size - good balance of accuracy and speed for iOS
+  num_classes: 6
+
+optim:
+  epochs: 200  # More epochs for better convergence (increased from 100)
+  batch: 8  # Larger batch size if memory allows, otherwise reduce to 4
+  # For MPS: If OOM, reduce batch to 4 or 2, but batch=8 is ideal for stability
+  lr0: 0.01
+  lrf: 0.01  # Lower final LR for fine-tuning
+  momentum: 0.937
+  weight_decay: 0.0005
+  warmup_epochs: 3.0
+  warmup_momentum: 0.8
+  warmup_bias_lr: 0.1
+  # Learning rate schedule: cosine annealing helps with convergence
+  cos_lr: true  # Use cosine learning rate schedule for better convergence
+
+augmentation:
+  # Strong augmentation for better generalization
+  hsv_h: 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  degrees: 10.0
+  translate: 0.1
+  scale: 0.5  # Scale augmentation helps with object size variations
+  shear: 2.0
+  perspective: 0.0  # Keep at 0 for road defect detection (maintains perspective)
+  flipud: 0.0  # Road defects shouldn't be flipped vertically
+  fliplr: 0.5  # Horizontal flip is good for road defects
+  mosaic: 1.0  # Full mosaic augmentation (helps with small object detection)
+  mixup: 0.15  # Increased mixup for better generalization
+  copy_paste: 0.3  # Copy-paste augmentation (helps with rare classes)
+  close_mosaic: 10  # Disable mosaic in last 10 epochs for better convergence
+
+hardware:
+  # device: "cuda"  # Auto-detected if not set: checks for cuda -> mps -> cpu
+  workers: 4  # Can use more workers for data loading (not for MPS, adjust if needed)
+
+validation:
+  max_det: 300  # Allow more detections per image
+  conf: 0.001  # Lower confidence threshold during validation to find all objects
+  iou: 0.7  # IoU threshold for NMS
+
+paths:
+  data_yaml: "data/yolo/rdd2022.yaml"
+  weights_dir: "weights"
+
+# Additional training strategies for better performance:
+# - Multi-scale training (handled automatically by YOLOv8)
+# - Focal loss for handling class imbalance (if needed)
+# - Class weights (if dataset is imbalanced)

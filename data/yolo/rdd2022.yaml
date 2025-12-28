@@ -1,0 +1,6 @@
+path: /Users/ardaozel/road_defect_detection/data/yolo
+train: images/train
+val: images/val
+test: images/test
+nc: 6
+names: ['D00', 'D01', 'D10', 'D11', 'D20', 'D40']

@@ -1,0 +1,72 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Training Results & Logs
+results/
+runs/
+training_log.txt
+*.log
+
+# Model Weights (too large for GitHub)
+weights/
+*.pt
+*.pth
+*.onnx
+*.torchscript
+*.tflite
+*.mlmodel
+*.coreml
+*.pb
+*.h5
+*.ckpt
+
+# Dataset Files (too large for GitHub)
+data/raw/
+data/yolo/images/
+data/yolo/labels/
+*.cache
+*.npy
+
+# Exports & Artifacts
+artifacts/
+exports/
+
+# Temporary Files
+*.tmp
+*.temp
+.cache/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Keep important configs and structure
+!data/yolo/rdd2022.yaml
+!configs/
+!scripts/
+!iOS/

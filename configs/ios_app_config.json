@@ -1,0 +1,53 @@
+{
+  "app_info": {
+    "name": "Road Defect Detector",
+    "version": "1.0.0",
+    "bundle_id": "com.yourcompany.roaddefectdetector",
+    "minimum_ios_version": "14.0"
+  },
+  "model": {
+    "name": "best.mlmodel",
+    "input_size": 640,
+    "precision": "FP16",
+    "format": "CoreML",
+    "classes": ["D00", "D01", "D10", "D11", "D20", "D40"],
+    "class_descriptions": {
+      "D00": "Longitudinal Crack",
+      "D01": "Transverse Crack",
+      "D10": "Alligator Crack",
+      "D11": "Pothole",
+      "D20": "Marking Blur",
+      "D40": "Road Repair"
+    },
+    "class_colors": {
+      "D00": "#007AFF",
+      "D01": "#FF3B30",
+      "D10": "#FF9500",
+      "D11": "#AF52DE",
+      "D20": "#FFCC00",
+      "D40": "#34C759"
+    }
+  },
+  "detection": {
+    "default_confidence_threshold": 0.4,
+    "iou_threshold": 0.7,
+    "max_detections": 100,
+    "min_box_area": 100
+  },
+  "ui": {
+    "show_confidence": true,
+    "show_class_names": true,
+    "box_line_width": 3,
+    "font_size": 16,
+    "animation_duration": 0.3
+  },
+  "performance": {
+    "cache_model": true,
+    "process_on_background": true,
+    "use_vision_framework": true
+  },
+  "permissions": {
+    "camera": "This app needs camera access to detect road defects in real-time.",
+    "photo_library": "This app needs photo library access to analyze saved images."
+  }
+}

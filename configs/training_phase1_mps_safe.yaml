@@ -1,0 +1,54 @@
+# MPS-safe version with same optimizations but memory-constrained settings
+# Use this if you get OOM errors with the optimized config
+
+experiment:
+  project: "results"
+  name: "yolov8s_rdd2022_phase1_mps"
+  seed: 42
+  exist_ok: false
+
+model:
+  weights: "yolov8s.pt"  # Still using 's' for better accuracy
+  imgsz: 640  # Keep 640 for accuracy - essential for good mAP
+  num_classes: 6
+
+optim:
+  epochs: 200
+  batch: 2  # Very safe batch size for MPS to prevent OOM
+  lr0: 0.01
+  lrf: 0.01
+  momentum: 0.937
+  weight_decay: 0.0005
+  warmup_epochs: 3.0
+  warmup_momentum: 0.8
+  warmup_bias_lr: 0.1
+  cos_lr: true  # Cosine LR schedule
+
+augmentation:
+  hsv_h: 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  degrees: 10.0
+  translate: 0.1
+  scale: 0.5
+  shear: 2.0
+  perspective: 0.0
+  flipud: 0.0
+  fliplr: 0.5
+  mosaic: 0.9  # Slightly reduced for memory
+  mixup: 0.1   # Slightly reduced for memory
+  copy_paste: 0.2  # Reduced for memory
+  close_mosaic: 10
+
+hardware:
+  workers: 0  # Set to 0 for maximum memory safety on MPS
+  # workers=0 means single-threaded data loading (safer for memory)
+
+validation:
+  max_det: 300
+  conf: 0.001
+  iou: 0.7
+
+paths:
+  data_yaml: "data/yolo/rdd2022.yaml"
+  weights_dir: "weights"

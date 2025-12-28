@@ -1,0 +1,54 @@
+# Fine-tuning configuration for maximum accuracy
+# Use this AFTER initial training completes to push accuracy even higher
+# This uses a lower learning rate to fine-tune the best model from initial training
+
+experiment:
+  project: "results"
+  name: "yolov8n_rdd2022_finetune"
+  seed: 42
+  exist_ok: false
+
+model:
+  # IMPORTANT: Set this to your best model from initial training
+  # Example: weights: "results/yolov8n_rdd2022/weights/best.pt"
+  weights: "results/yolov8n_rdd2022/weights/best.pt"  # Update this path!
+  imgsz: 512  # Maximum image size for best accuracy (if memory allows)
+  num_classes: 6
+
+optim:
+  epochs: 30  # Fine-tuning doesn't need as many epochs
+  batch: 2  # Keep small for MPS
+  lr0: 0.001  # Much lower learning rate for fine-tuning (10x smaller)
+  lrf: 0.01  # Final LR fraction
+  momentum: 0.937
+  weight_decay: 0.0005
+  warmup_epochs: 2.0  # Shorter warmup for fine-tuning
+  warmup_momentum: 0.8
+  warmup_bias_lr: 0.1
+
+augmentation:
+  hsv_h: 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  degrees: 10.0
+  translate: 0.1
+  scale: 0.5
+  shear: 2.0
+  perspective: 0.0
+  flipud: 0.0
+  fliplr: 0.5
+  mosaic: 0.5  # Reduced mosaic for fine-tuning (less aggressive)
+  mixup: 0.05  # Reduced mixup for fine-tuning
+  copy_paste: 0.0
+  close_mosaic: 5  # Disable mosaic earlier for fine-tuning
+
+hardware:
+  workers: 1
+
+validation:
+  max_det: 150
+  iou: 0.7
+
+paths:
+  data_yaml: "data/yolo/rdd2022.yaml"
+  weights_dir: "weights"
