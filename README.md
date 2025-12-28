@@ -1,107 +1,133 @@
-# Road Defect Detection (RDD2022)
+# 🛣️ Road Defect Detection System
 
-Lightweight end-to-end pipeline for detecting road surface defects (cracks, potholes, etc.) using YOLOv8-nano on the Road Damage Dataset 2022. The project covers dataset acquisition, preprocessing, training, evaluation, optimization for mobile devices, and real-time inference.
+YOLOv8-based Road Defect Detection System with iOS Mobile App - Thesis Project
 
-## Project Structure
+## 📋 Project Overview
+
+This project implements a comprehensive road defect detection system using YOLOv8 object detection model, optimized for iOS mobile deployment.
+
+### Features
+
+- **Deep Learning Model**: YOLOv8s (Small variant) trained on RDD2022 dataset
+- **iOS Mobile App**: Native SwiftUI app with CoreML integration
+- **Real-time Detection**: On-device inference using CoreML
+- **GPS Location Tagging**: Automatic location tagging for detected defects
+- **Detection History**: Save and manage detection records
+- **Reporting System**: Location-based reporting to road maintenance authorities (25+ countries supported)
+- **Photo Management**: Import from gallery, delete, and share functionality
+
+## 🚀 Quick Start
+
+### 1. Environment Setup
+
+```bash
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### 2. Dataset Preparation
+
+```bash
+# Download RDD2022 dataset
+python scripts/download_rdd2022.py
+
+# Prepare YOLO format
+python scripts/prepare_rdd2022.py \
+    --raw-dir data/raw/RDD2022 \
+    --output-dir data/yolo
+```
+
+### 3. Training
+
+```bash
+# Start Phase 1 training (200 epochs, optimized for MPS)
+python scripts/train_yolov8.py \
+    --config configs/training_phase1_mps_safe.yaml \
+    --batch 2 \
+    --workers 0 \
+    --epochs 200 \
+    --imgsz 640
+```
+
+### 4. iOS App Setup
+
+See `iOS/XCODE_SETUP_GUIDE.md` for detailed Xcode setup instructions.
+
+## 📁 Project Structure
 
 ```
 road_defect_detection/
-├── configs/
-│   └── training.yaml          # Centralized hyperparameters & paths
-├── data/
-│   ├── raw/                   # Downloaded archives & extracted RDD2022
-│   └── yolo/                  # Train/val/test splits + rdd2022.yaml
-├── scripts/
-│   ├── download_rdd2022.py    # Stream + extract raw dataset
-│   ├── prepare_rdd2022.py     # Convert to YOLO format splits
-│   ├── train_yolov8.py        # Config-driven training script
-│   ├── evaluate_rdd2022.py    # Validation metrics and reports
-│   ├── optimize_model.py      # Export & quantize for deployment
-│   └── infer_realtime.py      # Webcam/video inference utility
-└── README.md
+├── scripts/              # Python training and evaluation scripts
+├── configs/              # Training and inference configurations
+├── iOS/                  # iOS SwiftUI application code
+├── data/                 # Dataset files (not in repo - too large)
+├── results/              # Training results (not in repo)
+└── weights/              # Model weights (not in repo)
 ```
 
-## Setup
+## 🎯 Training Status
 
-1. **Environment**
-   ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate
-   pip install --upgrade pip
-   pip install ultralytics torch torchvision opencv-python pandas pyyaml tqdm matplotlib seaborn onnx onnxruntime
-   ```
-   Adjust packages for your hardware (CUDA/MPS wheels, etc.).
+Current training progress: **Epoch 1/200**
 
-2. **Configuration**
-   - Edit `configs/training.yaml` to match your hardware, dataset path, and experiment naming.
+- Model: YOLOv8s (Small)
+- Dataset: RDD2022 (19,089 training images, 3,579 validation images)
+- Target: >60% mAP@0.5:0.95
+- Device: MPS (Metal Performance Shaders on macOS)
 
-## Dataset Pipeline
+## 📱 iOS App Features
 
-1. **Download** (saves to `data/raw` by default):
-   ```bash
-   python scripts/download_rdd2022.py --output-dir /Users/ardaozel/road_defect_detection/data/raw
-   ```
-2. **Prepare YOLO splits**:
-   ```bash
-   python scripts/prepare_rdd2022.py \
-       --raw-dir /Users/ardaozel/road_defect_detection/data/raw/RDD2022 \
-       --output-dir /Users/ardaozel/road_defect_detection/data/yolo
-   ```
-   This command creates `images/{train,val,test}` and `labels/{train,val,test}` plus `rdd2022.yaml`.
+- ✅ Real-time defect detection using CoreML
+- ✅ Camera integration
+- ✅ Photo library import
+- ✅ GPS location tagging
+- ✅ Detection history with thumbnails
+- ✅ Location-based reporting (25+ countries)
+- ✅ Photo sharing and deletion
+- ✅ Beautiful UI/UX with gradients and animations
 
-## Training
+## 📚 Documentation
 
-```bash
-python scripts/train_yolov8.py \
-    --config configs/training.yaml \
-    --device cuda \
-    --batch 16 \
-    --epochs 100
-```
+- **Training**: See `TRAINING_STRATEGY.md`, `TRAINING_EXPLANATION.md`
+- **iOS Setup**: See `iOS/XCODE_SETUP_GUIDE.md`, `iOS/QUICK_XCODE_SETUP.md`
+- **Model Export**: See `iOS/HOW_TO_ADD_COREML.md`
+- **Features**: See `iOS/FEATURES_SUMMARY.md`, `iOS/NEW_FEATURES_GUIDE.md`
+- **GitHub Setup**: See `GITHUB_KURULUM.md`, `CURSOR_GITHUB_INTEGRATION.md`
 
-- Override any hyperparameter from the CLI (e.g., `--imgsz 512`, `--lr0 0.005`).
-- Best weights are duplicated into the `weights/` directory for downstream steps.
+## 🛠️ Tools & Scripts
 
-## Evaluation & Metrics
+- `scripts/train_yolov8.py` - Main training script
+- `scripts/prepare_rdd2022.py` - Dataset preparation
+- `scripts/evaluate_rdd2022.py` - Model evaluation
+- `scripts/export_for_ios.py` - CoreML export
+- `scripts/monitor_training.py` - Training monitoring
+- `scripts/visualize_detections.py` - Visualization tools
 
-Validate on any split and optionally capture metrics as JSON:
-```bash
-python scripts/evaluate_rdd2022.py \
-    --weights weights/best.pt \
-    --data data/yolo/rdd2022.yaml \
-    --split test \
-    --json results/test_metrics.json \
-    --plots
-```
+## 📊 Supported Countries for Reporting
 
-## Model Optimization / Export
+The iOS app includes location-based reporting for:
+- 🇹🇷 Turkey
+- 🇩🇪 Germany
+- 🇫🇷 France, 🇪🇸 Spain, 🇮🇹 Italy, 🇳🇱 Netherlands
+- 🇵🇱 Poland, 🇵🇹 Portugal, 🇬🇷 Greece, 🇨🇿 Czech Republic
+- 🇷🇴 Romania, 🇭🇺 Hungary, 🇸🇪 Sweden, 🇳🇴 Norway
+- 🇩🇰 Denmark, 🇫🇮 Finland, 🇦🇹 Austria, 🇨🇭 Switzerland
+- 🇮🇪 Ireland, 🇺🇸 USA, 🇬🇧 UK, 🇨🇦 Canada, 🇦🇺 Australia
+- And more...
 
-Export to ONNX (default) with optional quantization flags:
-```bash
-python scripts/optimize_model.py \
-    --weights weights/best.pt \
-    --format onnx \
-    --imgsz 640 \
-    --simplify
-```
-Other formats: `torchscript`, `tflite`, `coreml`, `ncnn`. Use `--int8` for INT8-compatible exports, `--half` for FP16, and `--dynamic` for dynamic ONNX axes. Artifacts land in the `artifacts/exports/` directory by default.
+## 📝 License
 
-## Real-Time Inference
+This project is developed as a thesis project. See LICENSE file for details.
 
-```bash
-python scripts/infer_realtime.py \
-    --weights weights/best.pt \
-    --source 0 \
-    --conf 0.25 \
-    --save \
-    --output runs/inference/webcam.mp4
-```
+## 👤 Author
 
-- `--source` accepts webcam indices (`0`), video files, image paths, or globs.
-- Use `--headless` on servers without display. ESC closes the preview window.
+Developed as part of thesis research on road defect detection using deep learning.
 
-## Tips & Next Steps
+## 🙏 Acknowledgments
 
-- Track experiments with the Ultralytics UI (`results/`), Weights & Biases, or TensorBoard.
-- Consider further compression (pruning, knowledge distillation) before deploying on very low-power devices.
-- Add unit tests around annotation parsing and data integrity checks if you extend the preprocessing pipeline.
+- YOLOv8 by Ultralytics
+- RDD2022 Dataset
+- iOS CoreML Framework
