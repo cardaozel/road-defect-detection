@@ -1,0 +1,57 @@
+# High-Performance Training Configuration
+# Optimized to achieve: Recall ≥ 70%, Precision ≥ 60%, mAP@0.5 ≥ 60%, mAP@0.5:0.95 ≥ 35%
+# Based on current results: Precision 43.4%, Recall 24%, mAP@0.5 19.3%, mAP@0.5:0.95 7.6%
+
+experiment:
+  project: "results"
+  name: "yolov8s_rdd2022_high_perf"
+  seed: 42
+  exist_ok: false
+
+model:
+  weights: "yolov8s.pt"  # ⚡ CRITICAL: Switch from nano (n) to small (s) for better capacity
+  imgsz: 640  # ⚡ CRITICAL: Increased from 416 to 640 for better small object detection
+  num_classes: 6
+
+optim:
+  epochs: 200  # ⚡ Increased from 100 to 200 for better convergence
+  batch: 4  # ⚡ Increased from 1 to 4 (adjust based on memory)
+  lr0: 0.01
+  lrf: 0.001  # ⚡ Lower final LR (0.001 vs 0.01) for fine-tuning
+  momentum: 0.937
+  weight_decay: 0.0005
+  warmup_epochs: 5.0  # ⚡ Increased warmup for stability
+  warmup_momentum: 0.8
+  warmup_bias_lr: 0.1
+  cos_lr: true  # ⚡ Enable cosine learning rate schedule for better convergence
+
+augmentation:
+  # ⚡ Enhanced augmentation for better generalization
+  hsv_h: 0.02  # Increased from 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  degrees: 15.0  # Increased from 10.0 for more rotation
+  translate: 0.2  # Increased from 0.1 for more translation
+  scale: 0.9  # ⚡ Increased from 0.5 to 0.9 (0.1-1.0 range) for more scale variation
+  shear: 5.0  # Increased from 2.0
+  perspective: 0.001  # Enable perspective transformation (was 0.0)
+  flipud: 0.0
+  fliplr: 0.5
+  mosaic: 1.0  # ⚡ Increased from 0.75 to 1.0 (full mosaic augmentation)
+  mixup: 0.15  # ⚡ Increased from 0.05 to 0.15 for better regularization
+  copy_paste: 0.1  # ⚡ Enable copy-paste augmentation (was 0.0)
+  close_mosaic: 15  # Disable mosaic later (was 10)
+
+hardware:
+  # device: "cuda"  # Auto-detected
+  workers: 2  # ⚡ Can increase to 2-4 if memory allows
+
+validation:
+  max_det: 300  # ⚡ Increased from 150 to 300 for better recall
+  conf: 0.15  # ⚡ Lower confidence threshold for higher recall (was 0.25 default)
+  iou: 0.6  # ⚡ Reduced from 0.7 to 0.6 for less aggressive NMS (better recall)
+
+paths:
+  data_yaml: "data/yolo/rdd2022.yaml"
+  weights_dir: "weights"
+

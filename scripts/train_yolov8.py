@@ -161,8 +161,20 @@ def merge_settings(args: argparse.Namespace, cfg: Dict[str, Any]) -> tuple[Dict[
     settings["name"] = getattr(args, "run_name") or resolve(cfg, "experiment", "name", "yolov8n_rdd2022")
     settings["exist_ok"] = bool(getattr(args, "exist_ok") or resolve(cfg, "experiment", "exist_ok", False))
     settings["seed"] = getattr(args, "seed") or resolve(cfg, "experiment", "seed", 42)
-    settings["resume"] = getattr(args, "resume")
+    resume_flag = getattr(args, "resume")
+    settings["resume"] = resume_flag
     settings["close_mosaic"] = getattr(args, "close_mosaic") or resolve(cfg, "augmentation", "close_mosaic", 10)
+    
+    # If resuming, find and use the last checkpoint instead of default weights
+    if resume_flag:
+        run_dir = Path(settings["project"]) / settings["name"]
+        last_checkpoint = run_dir / "weights" / "last.pt"
+        if last_checkpoint.exists():
+            settings["model"] = str(last_checkpoint)
+            logging.info("Resuming training from checkpoint: %s", last_checkpoint)
+        else:
+            logging.warning("Resume requested but no checkpoint found at %s. Starting fresh training.", last_checkpoint)
+            settings["resume"] = False
 
     aug_keys = [
         "hsv_h",
