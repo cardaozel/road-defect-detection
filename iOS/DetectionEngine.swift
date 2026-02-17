@@ -9,6 +9,7 @@ import Foundation
 import CoreML
 import Vision
 import UIKit
+import Combine
 
 /// Detection result containing bounding box and confidence
 struct Detection {
@@ -18,7 +19,7 @@ struct Detection {
 }
 
 /// CoreML-based detection engine for road defects
-class DetectionEngine {
+class DetectionEngine: ObservableObject {
     
     // MARK: - Properties
     
@@ -44,10 +45,35 @@ class DetectionEngine {
     
     /// Load CoreML model
     private func loadModel() {
-        guard let modelURL = Bundle.main.url(forResource: "best", withExtension: "mlmodel") else {
-            print("❌ Model file not found in bundle")
+        // Debug: List all bundle resources
+        if let resourcePath = Bundle.main.resourcePath {
+            print("📦 Bundle resource path: \(resourcePath)")
+            if let contents = try? FileManager.default.contentsOfDirectory(atPath: resourcePath) {
+                print("📦 Bundle contents (\(contents.count) items):")
+                for item in contents.prefix(20) {
+                    print("   - \(item)")
+                }
+            }
+        }
+        
+        // Try .mlpackage first (newer format), then .mlmodel (older format)
+        var modelURL = Bundle.main.url(forResource: "best", withExtension: "mlpackage")
+        if modelURL == nil {
+            print("⚠️ best.mlpackage not found, trying .mlmodel...")
+            modelURL = Bundle.main.url(forResource: "best", withExtension: "mlmodel")
+        }
+        
+        guard let modelURL = modelURL else {
+            print("❌ Model file not found in bundle (tried both .mlpackage and .mlmodel)")
+            print("❌ Make sure 'best.mlpackage' is added to your Xcode project target:")
+            print("   1. Open Xcode")
+            print("   2. Select 'best.mlpackage' in Project Navigator")
+            print("   3. In File Inspector, check 'Target Membership' → 'RoadDefectDetector'")
+            print("   4. Clean build folder (Cmd+Shift+K) and rebuild")
             return
         }
+        
+        print("✅ Found model at: \(modelURL.path)")
         
         do {
             // Compile model if needed
@@ -63,7 +89,8 @@ class DetectionEngine {
             self.model = vnModel
             print("✅ Model loaded successfully")
         } catch {
-            print("❌ Error loading model: \(error)")
+            print("❌ Error loading model: \(error.localizedDescription)")
+            print("❌ Full error: \(error)")
         }
     }
     

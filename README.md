@@ -55,7 +55,7 @@ python scripts/train_yolov8.py \
 
 ### 4. iOS App Setup
 
-See `iOS/XCODE_SETUP_GUIDE.md` for detailed Xcode setup instructions.
+See `docs/iOS/XCODE_SETUP_GUIDE.md` for detailed Xcode setup instructions.
 
 ## 📁 Project Structure
 
@@ -64,6 +64,7 @@ road_defect_detection/
 ├── scripts/              # Python training and evaluation scripts
 ├── configs/              # Training and inference configurations
 ├── iOS/                  # iOS SwiftUI application code
+├── docs/                 # All project documentation
 ├── data/                 # Dataset files (not in repo - too large)
 ├── results/              # Training results (not in repo)
 └── weights/              # Model weights (not in repo)
@@ -91,11 +92,16 @@ Current training progress: **Epoch 1/200**
 
 ## 📚 Documentation
 
-- **Training**: See `TRAINING_STRATEGY.md`, `TRAINING_EXPLANATION.md`
-- **iOS Setup**: See `iOS/XCODE_SETUP_GUIDE.md`, `iOS/QUICK_XCODE_SETUP.md`
-- **Model Export**: See `iOS/HOW_TO_ADD_COREML.md`
-- **Features**: See `iOS/FEATURES_SUMMARY.md`, `iOS/NEW_FEATURES_GUIDE.md`
-- **GitHub Setup**: See `GITHUB_KURULUM.md`, `CURSOR_GITHUB_INTEGRATION.md`
+All documentation is organized in the `docs/` folder. See `docs/DOCUMENTATION_INDEX.md` for a complete index.
+
+- **Training**: See `docs/TRAINING_STRATEGY.md`, `docs/TRAINING_EXPLANATION.md`
+- **iOS Setup**: See `docs/iOS/XCODE_SETUP_GUIDE.md`, `docs/iOS/QUICK_XCODE_SETUP.md`
+- **Model Export**: See `docs/iOS/HOW_TO_ADD_COREML.md`
+- **Features**: See `docs/iOS/FEATURES_SUMMARY.md`, `docs/iOS/NEW_FEATURES_GUIDE.md`
+- **GitHub Setup**: See `docs/GITHUB_KURULUM.md`, `docs/CURSOR_GITHUB_INTEGRATION.md`
+- **Phase 2 (iOS)**: See `docs/STEP_BY_STEP_PHASE2.md` for complete setup guide
+- **Phase 3 (Presentation)**: See `docs/PHASE3_SLIDE_TEXT.md`
+- **Phase 4 (Thesis)**: See `docs/PHASE4_THESIS_START.md`
 
 ## 🛠️ Tools & Scripts
 

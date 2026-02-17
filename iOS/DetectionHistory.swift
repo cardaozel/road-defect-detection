@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 class DetectionHistory: ObservableObject {
     @Published var records: [DetectionRecord] = []

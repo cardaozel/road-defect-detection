@@ -8,6 +8,7 @@
 import Foundation
 import CoreLocation
 import Contacts
+import Combine
 
 class LocationService: NSObject, ObservableObject {
     private let locationManager = CLLocationManager()

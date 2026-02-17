@@ -122,7 +122,7 @@ struct ResultsView: View {
                             }
                             
                             // Delete Button (if onDelete callback provided)
-                            if let onDelete = onDelete {
+                            if onDelete != nil {
                                 Button(action: {
                                     showDeleteConfirmation = true
                                 }) {
@@ -260,9 +260,8 @@ struct ResultsView: View {
             generateAnnotatedImage()
         }
         .sheet(isPresented: $showShareSheet) {
-            if let imageToShare = annotatedImage ?? image {
-                ShareSheet(activityItems: [imageToShare])
-            }
+            let imageToShare = annotatedImage ?? image
+            ShareSheet(activityItems: [imageToShare])
         }
         .sheet(isPresented: $showReport) {
             if let location = locationService.getCurrentLocation() {
@@ -316,8 +315,8 @@ struct BeautifulDetectionRow: View {
                     .fill(
                         LinearGradient(
                             gradient: Gradient(colors: [
-                                engine.color(for: detection.className),
-                                engine.color(for: detection.className).opacity(0.7)
+                                Color(engine.color(for: detection.className)),
+                                Color(engine.color(for: detection.className)).opacity(0.7)
                             ]),
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -365,8 +364,8 @@ struct BeautifulDetectionRow: View {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(red: 0.98, green: 0.99, blue: 1.0))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(engine.color(for: detection.className).opacity(0.2), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color(engine.color(for: detection.className)).opacity(0.2), lineWidth: 1)
                 )
         )
     }
