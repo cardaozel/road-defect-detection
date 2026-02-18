@@ -55,7 +55,10 @@ python scripts/train_yolov8.py \
 
 ### 4. iOS App Setup
 
-See `docs/iOS/XCODE_SETUP_GUIDE.md` for detailed Xcode setup instructions.
+1. Open the project in Xcode (use `RoadDefectDetector` or create a new SwiftUI project and add `iOS/` source files)
+2. Export the trained model to CoreML: `python scripts/export_to_coreml.py weights/best.pt`
+3. Add `best.mlpackage` to your Xcode project target
+4. Build and run on device or simulator
 
 ## 📁 Project Structure
 
@@ -63,21 +66,18 @@ See `docs/iOS/XCODE_SETUP_GUIDE.md` for detailed Xcode setup instructions.
 road_defect_detection/
 ├── scripts/              # Python training and evaluation scripts
 ├── configs/              # Training and inference configurations
-├── iOS/                  # iOS SwiftUI application code
-├── docs/                 # All project documentation
+├── iOS/                  # iOS SwiftUI application source code
 ├── data/                 # Dataset files (not in repo - too large)
 ├── results/              # Training results (not in repo)
 └── weights/              # Model weights (not in repo)
 ```
 
-## 🎯 Training Status
+## 🎯 Model & Dataset
 
-Current training progress: **Epoch 1/200**
-
-- Model: YOLOv8s (Small)
-- Dataset: RDD2022 (19,089 training images, 3,579 validation images)
-- Target: >60% mAP@0.5:0.95
-- Device: MPS (Metal Performance Shaders on macOS)
+- **Model**: YOLOv8s (Small)
+- **Dataset**: RDD2022 (19,089 training images, 3,579 validation images)
+- **Target**: >60% mAP@0.5:0.95
+- **Device**: MPS (Metal Performance Shaders on macOS) or CUDA
 
 ## 📱 iOS App Features
 
@@ -90,25 +90,12 @@ Current training progress: **Epoch 1/200**
 - ✅ Photo sharing and deletion
 - ✅ Beautiful UI/UX with gradients and animations
 
-## 📚 Documentation
-
-All documentation is organized in the `docs/` folder. See `docs/DOCUMENTATION_INDEX.md` for a complete index.
-
-- **Training**: See `docs/TRAINING_STRATEGY.md`, `docs/TRAINING_EXPLANATION.md`
-- **iOS Setup**: See `docs/iOS/XCODE_SETUP_GUIDE.md`, `docs/iOS/QUICK_XCODE_SETUP.md`
-- **Model Export**: See `docs/iOS/HOW_TO_ADD_COREML.md`
-- **Features**: See `docs/iOS/FEATURES_SUMMARY.md`, `docs/iOS/NEW_FEATURES_GUIDE.md`
-- **GitHub Setup**: See `docs/GITHUB_KURULUM.md`, `docs/CURSOR_GITHUB_INTEGRATION.md`
-- **Phase 2 (iOS)**: See `docs/STEP_BY_STEP_PHASE2.md` for complete setup guide
-- **Phase 3 (Presentation)**: See `docs/PHASE3_SLIDE_TEXT.md`
-- **Phase 4 (Thesis)**: See `docs/PHASE4_THESIS_START.md`
-
 ## 🛠️ Tools & Scripts
 
 - `scripts/train_yolov8.py` - Main training script
 - `scripts/prepare_rdd2022.py` - Dataset preparation
 - `scripts/evaluate_rdd2022.py` - Model evaluation
-- `scripts/export_for_ios.py` - CoreML export
+- `scripts/export_to_coreml.py` - Export trained model to CoreML
 - `scripts/monitor_training.py` - Training monitoring
 - `scripts/visualize_detections.py` - Visualization tools
 

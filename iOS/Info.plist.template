@@ -8,8 +8,6 @@
 	<string>This app needs photo library access to analyze saved images.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app needs permission to save annotated detection results to your photo library.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs photo library access to analyze saved images.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs location access to tag detections with GPS coordinates and provide local authority contact information for reporting road defects.</string>
 </dict>
